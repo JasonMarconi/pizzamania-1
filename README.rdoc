@@ -25,5 +25,6 @@ Things you may want to cover:
    4. Login as baker, he can see all orders whose status is not completed, and it will be order by pickup datetime of order.
    5. Manager can login and see all the order datewsie, by default it will show only current date order, but he can filter by date given above the order list.
   
-  
+ *  Demo View
+      https://acme-pizzamania.herokuapp.com/
   
