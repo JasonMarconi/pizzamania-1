@@ -25,5 +25,15 @@
   <%= @order.size %>
 </p>
 
+<p>
+  <strong>Is completed:</strong>
+  <%= @order.is_completed ? 'Yes' : 'No' %>
+</p>
+
+<p>
+  <strong>Is ready:</strong>
+  <%= @order.is_ready ? 'Yes' : 'No' %>
+</p>
+
 <%= link_to 'Edit', edit_order_path(@order), class: 'btn btn-primary' %>
 <%= link_to 'Back', orders_path, class: 'btn btn-default' %>

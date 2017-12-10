@@ -1,0 +1,57 @@
+<br>
+<%= form_tag orders_path, method: :get, class: "filter-form form-horizontal", role: "filter" do %>
+  <div class="form-group">
+    <label class="col-sm-2 control-label">Filter by date:</label>
+    <div class="col-sm-4">
+      <%= text_field_tag :order_date, "", class: "form-control" %>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+    <%= link_to 'Reset', orders_path, class: 'btn btn-default' %>
+  </div>
+<% end %>
+<br><br>
+<h1>Listing orders</h1>
+
+<div class="table-responsive order-list">
+  <% if @orders.present? %>
+    <table class="table table-hover">
+      <thead>
+      <tr>
+        <th>Customer name</th>
+        <th>Customer phone</th>
+        <th>Pickup datetime</th>
+        <th>Pizza type</th>
+        <th>Size</th>
+        <th>Completed</th>
+        <th>Ready for pickup</th>
+        <th>Created on</th>
+        <th colspan="3"></th>
+      </tr>
+      </thead>
+      <tbody>
+      <% @orders.each do |order| %>
+        <tr>
+          <td><%= order.customer_name %></td>
+          <td><%= order.customer_phone %></td>
+          <td><%= convert_to_formatted_datetime(order.pickup_datetime) %></td>
+          <td><%= order.pizza_type.try(:name) %></td>
+          <td><%= order.size %></td>
+          <td><%= order.is_completed ? 'Yes' : 'No' %></td>
+          <td><%= order.is_ready ? 'Yes' : 'No' %></td>
+          <td><%= convert_to_formatted_datetime(order.created_at) %></td>
+          <td>
+            <%= link_to 'Show', order_path(order), class: "btn btn-primary" %>
+            <%= link_to 'Edit', edit_order_path(order), class: "btn btn-primary" %>
+            <%= link_to 'Destroy', order, method: :delete, data: {confirm: 'Are you sure?'}, class: "btn btn-danger" %>
+          </td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  <% else %>
+    <p>No order found.</p>
+  <% end %>
+</div>
+<script>
+  $('#order_date').datetimepicker();
+</script>

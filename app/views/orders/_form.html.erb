@@ -14,37 +14,72 @@
   <div class="form-group">
     <%= f.label :customer_name, class: "col-sm-2 control-label" %>
     <div class="col-sm-4">
-      <%= f.text_field :customer_name, class: 'form-control' %>
+      <% if current_user.is_baker? %>
+        <%= f.text_field :customer_name, class: 'form-control', disabled: true %>
+      <% else %>
+        <%= f.text_field :customer_name, class: 'form-control' %>
+      <% end %>
     </div>
   </div>
 
   <div class="form-group">
     <%= f.label :customer_phone, class: "col-sm-2 control-label" %>
     <div class="col-sm-4">
-      <%= f.text_field :customer_phone, class: 'form-control' %>
+      <% if current_user.is_baker? %>
+        <%= f.text_field :customer_phone, class: 'form-control', disabled: true %>
+      <% else %>
+        <%= f.text_field :customer_phone, class: 'form-control' %>
+      <% end %>
     </div>
   </div>
 
   <div class="form-group">
     <%= f.label :pickup_datetime, class: "col-sm-2 control-label" %>
     <div class="col-sm-4">
-      <%= f.text_field :pickup_datetime, class: 'form-control' %>
+      <% if current_user.is_baker? %>
+        <%= f.text_field :pickup_datetime, class: 'form-control', disabled: true %>
+      <% else %>
+        <%= f.text_field :pickup_datetime, class: 'form-control' %>
+      <% end %>
     </div>
   </div>
 
   <div class="form-group">
     <%= f.label :pizza_type_id, class: "col-sm-2 control-label" %>
     <div class="col-sm-4">
-      <%= f.select :pizza_type_id, pizza_type_select, {:include_blank => true, :required => true}, class: 'form-control' %>
+      <% if current_user.is_baker? %>
+        <%= f.select :pizza_type_id, pizza_type_select, {:include_blank => true, :required => true}, class: 'form-control', disabled: true %>
+      <% else %>
+        <%= f.select :pizza_type_id, pizza_type_select, {:include_blank => true, :required => true}, class: 'form-control' %>
+      <% end %>
     </div>
   </div>
 
   <div class="form-group">
     <%= f.label :size, class: "col-sm-2 control-label" %>
     <div class="col-sm-4">
-      <%= f.select :size, size_select, {:include_blank => true, :required => true}, class: 'form-control' %>
+      <% if current_user.is_baker? %>
+        <%= f.select :size, size_select, {:include_blank => true, :required => true}, class: 'form-control', disabled: true %>
+      <% else %>
+        <%= f.select :size, size_select, {:include_blank => true, :required => true}, class: 'form-control' %>
+      <% end %>
     </div>
   </div>
+
+  <% if current_user.is_baker? %>
+    <div class="form-group">
+      <%= f.label :is_completed, class: "col-sm-2 control-label" %>
+      <div class="col-sm-4">
+        <%= f.check_box :is_completed %> <br/>
+      </div>
+    </div>
+    <div class="form-group">
+      <%= f.label :is_ready, class: "col-sm-2 control-label" %>
+      <div class="col-sm-4">
+        <%= f.check_box :is_ready %> <br/>
+      </div>
+    </div>
+  <% end %>
 
   <div class="form-group">
     <div class="col-sm-offset-2 col-sm-10">

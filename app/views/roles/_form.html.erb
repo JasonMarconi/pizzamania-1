@@ -10,26 +10,24 @@
             <div class="form-container">
               <%= form_for @user, url: roles_path, html: {class: 'form-horizontal'} do |f| %>
                 <div class="form-group">
-                  <%= f.label :email %><br>
-                  <%= f.email_field :email, autofocus: true, class: "form-control", placeholder: "Email", required: true %>
+                  <%= f.label :name, class: 'col-sm-2 control-label' %>
+                  <div class="col-sm-9">
+                    <%= f.text_field :name, autofocus: true, class: "form-control", placeholder: "Name", required: true %>
+                  </div>
                 </div>
 
                 <div class="form-group">
-                  <%= f.label :password %>
-                  <% if @minimum_password_length %>
-                    <em>(<%= @minimum_password_length %> characters minimum)</em>
-                  <% end %><br/>
-                  <%= f.password_field :password, autocomplete: "off", :class => "form-control", :placeholder => "Password" %>
+                  <%= f.label :email, class: 'col-sm-2 control-label' %>
+                  <div class="col-sm-9">
+                    <%= f.email_field :email, autofocus: true, class: "form-control", placeholder: "Email", required: true %>
+                  </div>
                 </div>
 
                 <div class="form-group">
-                  <%= f.label :password_confirmation %>
-                  <%= f.password_field :password_confirmation, autocomplete: "off", :class => "form-control", :placeholder => "Confirm Password" %>
-                </div>
-
-                <div class="form-group">
-                  <%= label_tag :role, 'Role' %>
-                  <%= select_tag :role, options_for_select([["Manager", "manager"], ["Cashier", "cashier"], ["Baker", "baker"]]), class: "form-control" %>
+                  <%= label_tag :role, 'Role', class: 'col-sm-2 control-label' %>
+                  <div class="col-sm-9">
+                    <%= select_tag :role, options_for_select([["Manager", "manager"], ["Cashier", "cashier"], ["Baker", "baker"]]), class: "form-control" %>
+                  </div>
                 </div>
 
                 <div class="text-center">

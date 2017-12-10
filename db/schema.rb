@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171210073548) do
+ActiveRecord::Schema.define(version: 20171210093910) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -37,8 +37,10 @@ ActiveRecord::Schema.define(version: 20171210073548) do
     t.datetime "pickup_datetime"
     t.integer  "pizza_type_id"
     t.string   "size"
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
+    t.datetime "created_at",                      null: false
+    t.datetime "updated_at",                      null: false
+    t.boolean  "is_completed",    default: false
+    t.boolean  "is_ready",        default: false
   end
 
   add_index "orders", ["pizza_type_id"], name: "index_orders_on_pizza_type_id", using: :btree
@@ -62,6 +64,8 @@ ActiveRecord::Schema.define(version: 20171210073548) do
     t.inet     "last_sign_in_ip"
     t.datetime "created_at",                          null: false
     t.datetime "updated_at",                          null: false
+    t.integer  "role_id"
+    t.string   "role_type"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree

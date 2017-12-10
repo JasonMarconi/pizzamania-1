@@ -4,7 +4,16 @@ class OrdersController < ApplicationController
   # GET /orders
   # GET /orders.json
   def index
-    @orders = Order.all
+    if params[:order_date] && current_user.is_manager?
+      order_date = params[:order_date].to_date
+      @orders = Order.where(created_at: order_date.beginning_of_day..order_date.end_of_day)
+    elsif current_user.is_baker?
+      @orders = Order.where(is_completed: false).order('pickup_datetime')
+    elsif current_user.is_cashier?
+      @orders = Order.limit(5)
+    else
+      @orders = Order.all
+    end
   end
 
   # GET /orders/1
@@ -62,13 +71,13 @@ class OrdersController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_order
-      @order = Order.find(params[:id])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_order
+    @order = Order.find(params[:id])
+  end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def order_params
-      params.require(:order).permit(:customer_name, :customer_phone, :pickup_datetime, :pizza_type_id, :size)
-    end
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def order_params
+    params.require(:order).permit(:customer_name, :customer_phone, :pickup_datetime, :pizza_type_id, :size, :is_completed, :is_ready)
+  end
 end

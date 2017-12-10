@@ -1,0 +1,43 @@
+<%= link_to 'New Order', new_order_path, class: "btn btn-success" %>
+
+<h1>Recent orders</h1>
+
+<div class="table-responsive">
+  <% if @orders.present? %>
+    <table class="table table-hover">
+      <thead>
+      <tr>
+        <th>Customer name</th>
+        <th>Customer phone</th>
+        <th>Pickup datetime</th>
+        <th>Pizza type</th>
+        <th>Size</th>
+        <th>Completed</th>
+        <th>Ready for pickup</th>
+        <th>Created on</th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+      <% @orders.each do |order| %>
+        <tr>
+          <td><%= order.customer_name %></td>
+          <td><%= order.customer_phone %></td>
+          <td><%= convert_to_formatted_datetime(order.pickup_datetime) %></td>
+          <td><%= order.pizza_type.try(:name) %></td>
+          <td><%= order.size %></td>
+          <td><%= order.is_completed ? 'Yes' : 'No' %></td>
+          <td><%= order.is_ready ? 'Yes' : 'No' %></td>
+          <td><%= convert_to_formatted_datetime(order.created_at) %></td>
+          <td>
+            <%= link_to 'Show', order_path(order), class: "btn btn-primary" %>
+            <%= link_to 'Edit', edit_order_path(order), class: "btn btn-primary" %>
+          </td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  <% else %>
+    <p>No order created.</p>
+  <% end %>
+</div>
