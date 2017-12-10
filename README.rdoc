@@ -6,23 +6,24 @@ application up and running.
 Things you may want to cover:
 
 * Ruby version
+   2.3.0
 
-* System dependencies
+* Rails version 
+   4.2.9
 
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
-
-
-Please feel free to use a different markup language if you do not plan to run
-<tt>rake doc:app</tt>.
+* Installation Steps:
+   1. git clone git@github.com:jhadeepakkumar14/pizzamania.git
+   2. cd pizzamania
+   3. bundle install
+   4. rake db:create
+   5. rake db:migrate
+   
+* User Manual
+  1. Create Manager account, cashier account, baker account. (Note: Right now anyone can create any account, later it should be all under admin panel, or it should be condifrmed/approved by admin)
+  2. Create some pizza types by logging in as a Manager. (You will get manage pizza type nav link in header.)
+  3. Login as Cashier and create som order, cashier can also view last 5 recetn created orders.
+  4. Login as baker, he can see all orders whose status is not completed, and it will be order by pickup datetime of order.
+  5. Manager can login and see all the order datewsie, by default it will show only current date order, but he can filter by date given above the order list.
+  
+  
+  
