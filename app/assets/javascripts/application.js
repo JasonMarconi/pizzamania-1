@@ -16,5 +16,6 @@
 //= require dataTables/extras/dataTables.responsive
 //= require dataTables/bootstrap/3/jquery.dataTables.bootstrap
 //= require twitter/bootstrap
+//= require jquery.datetimepicker
 //= require turbolinks
 //= require_tree .

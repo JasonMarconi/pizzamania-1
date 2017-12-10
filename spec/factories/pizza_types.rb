@@ -1,6 +1,5 @@
 FactoryGirl.define do
-  factory :customer do
+  factory :pizza_type do
     name "MyString"
-    phone "MyString"
   end
 end

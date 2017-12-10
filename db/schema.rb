@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171210065529) do
+ActiveRecord::Schema.define(version: 20171210073548) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -26,14 +26,25 @@ ActiveRecord::Schema.define(version: 20171210065529) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "customers", force: :cascade do |t|
-    t.string   "name"
-    t.string   "phone"
+  create_table "managers", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  create_table "managers", force: :cascade do |t|
+  create_table "orders", force: :cascade do |t|
+    t.string   "customer_name"
+    t.string   "customer_phone"
+    t.datetime "pickup_datetime"
+    t.integer  "pizza_type_id"
+    t.string   "size"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+  end
+
+  add_index "orders", ["pizza_type_id"], name: "index_orders_on_pizza_type_id", using: :btree
+
+  create_table "pizza_types", force: :cascade do |t|
+    t.string   "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -56,4 +67,5 @@ ActiveRecord::Schema.define(version: 20171210065529) do
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
 
+  add_foreign_key "orders", "pizza_types"
 end
