@@ -19,11 +19,11 @@ Things you may want to cover:
    5. rake db:migrate
    
 * User Manual
-  1. Create Manager account, cashier account, baker account. (Note: Right now anyone can create any account, later it should be all under admin panel, or it should be condifrmed/approved by admin)
-  2. Create some pizza types by logging in as a Manager. (You will get manage pizza type nav link in header.)
-  3. Login as Cashier and create som order, cashier can also view last 5 recetn created orders.
-  4. Login as baker, he can see all orders whose status is not completed, and it will be order by pickup datetime of order.
-  5. Manager can login and see all the order datewsie, by default it will show only current date order, but he can filter by date given above the order list.
+   1. Create Manager account, cashier account, baker account. (Note: Right now anyone can create any account, later it should be all under admin panel, or it should be condifrmed/approved by admin)
+   2. Create some pizza types by logging in as a Manager. (You will get manage pizza type nav link in header.)
+   3. Login as Cashier and create som order, cashier can also view last 5 recetn created orders.
+   4. Login as baker, he can see all orders whose status is not completed, and it will be order by pickup datetime of order.
+   5. Manager can login and see all the order datewsie, by default it will show only current date order, but he can filter by date given above the order list.
   
   
   
