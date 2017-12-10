@@ -4,15 +4,17 @@ class OrdersController < ApplicationController
   # GET /orders
   # GET /orders.json
   def index
-    if params[:order_date] && current_user.is_manager?
-      order_date = params[:order_date].to_date
-      @orders = Order.where(created_at: order_date.beginning_of_day..order_date.end_of_day)
+    if current_user.is_manager?
+      if params[:order_date]
+        order_date = params[:order_date].to_date
+        @orders = Order.where(created_at: order_date.beginning_of_day..order_date.end_of_day)
+      else
+        @orders = Order.all
+      end
     elsif current_user.is_baker?
       @orders = Order.where(is_completed: false).order('pickup_datetime')
     elsif current_user.is_cashier?
       @orders = Order.limit(5)
-    else
-      @orders = Order.all
     end
   end
 

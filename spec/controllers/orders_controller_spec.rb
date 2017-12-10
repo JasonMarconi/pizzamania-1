@@ -24,7 +24,6 @@ require 'rails_helper'
 # `rails-controller-testing` gem.
 
 RSpec.describe OrdersController, type: :controller do
-
   # This should return the minimal set of attributes required to create a valid
   # Order. As you add validations to Order, be sure to
   # adjust the attributes here as well.
@@ -36,105 +35,218 @@ RSpec.describe OrdersController, type: :controller do
     skip("Add a hash of attributes invalid for your model")
   }
 
+  let!(:cashier) { create(:cashier, email: Faker::Internet.email) }
+  
   # This should return the minimal set of values that should be in the session
   # in order to pass any filters (e.g. authentication) defined in
   # OrdersController. Be sure to keep this updated too.
-  let(:valid_session) { {} }
+  let(:valid_session) { {current_user: cashier.user} }
 
+  # before do
+  #   allow(request.env['warder']).to receive(:authenticate!).and_return(current_user)
+  #   allow(controller).to receive(:current_user).and_return(current_user)
+  # end
+  
   describe "GET #index" do
-    it "returns a success response" do
-      order = Order.create! valid_attributes
-      get :index, {}, valid_session
-      expect(response).to be_success
+    context "when cashier is not logged in" do
+      it "should return unauthorized" do
+        get :index
+        expect(response).to_not be_success
+      end
     end
+
+    context "when cashier is logged in" do
+      login_cashier
+      
+      it "returns a success response" do
+        get :index
+        expect(response).to be_success
+      end
+    end
+    
+    context "when manager is logged in" do
+      login_manager
+
+      let!(:order1) { create(:order, created_at: Date.today) }
+      let!(:order2) { create(:order, created_at: 1.day.ago) }
+    
+      context "when filter through date" do
+        it "should return filtered orders" do
+          get :index, order_date: Date.today
+          expect(assigns(:orders)).to eq([order1])
+        end
+      end
+
+      context "when not filter through date" do
+        it "should return all orders" do
+          get :index
+          expect(assigns(:orders)).to eq([order1, order2])
+        end
+      end
+    end
+
+    context "when baker is logged in" do
+      login_baker
+      
+      let!(:completed_order) { create(:order, is_completed: true) }
+      let!(:incompleted_order) { create(:order, is_completed: false) }
+
+      it "should see only incomplete orders" do
+        get :index
+        expect(assigns(:orders)).to eq([incompleted_order])
+      end
+    end
+
+    context "when cashier is logged in" do
+      login_cashier
+      
+      let!(:completed_order) { create(:order, is_completed: true) }
+      let!(:incompleted_order) { create(:order, is_completed: false) }
+      let!(:current_order) { create(:order) }
+      let!(:previous_order) { create(:order, created_at: 1.day.ago) }
+      
+      it "should see only incomplete orders" do
+        get :index
+        expect(assigns(:orders)).to eq([completed_order, incompleted_order, current_order, previous_order])
+      end
+    end
+    
   end
 
   describe "GET #show" do
-    it "returns a success response" do
-      order = Order.create! valid_attributes
-      get :show, {:id => order.to_param}, valid_session
-      expect(response).to be_success
+    let!(:order) { create(:order) }
+
+    context "when user is logged in" do
+      login_cashier
+
+      it "returns a success response" do
+        get :show, {:id => order.to_param}
+        expect(response).to be_success
+      end
+    end
+
+    context "when user is not logged in" do
+      it "returns unsuccess response" do
+        get :show, {:id => order.to_param}
+        expect(response).to_not be_success
+      end
     end
   end
 
   describe "GET #new" do
-    it "returns a success response" do
-      get :new, {}, valid_session
-      expect(response).to be_success
+    context "when user is logged in" do
+      login_cashier
+      
+      it "returns a success response" do
+        get :new, {}, valid_session
+        expect(response).to be_success
+      end
     end
+
+    context "when user is not logged in" do
+      it "returns unsuccess response" do
+        get :new, {}, valid_session
+        expect(response).to_not be_success
+      end
+    end
+    
   end
 
   describe "GET #edit" do
-    it "returns a success response" do
-      order = Order.create! valid_attributes
-      get :edit, {:id => order.to_param}, valid_session
-      expect(response).to be_success
+    let!(:order) { create(:order) }
+    
+    context "when user is logged in" do
+      login_cashier
+      
+      it "returns a success response" do
+        get :edit, {:id => order.to_param}, valid_session
+        expect(response).to be_success
+      end
+    end
+
+    context "when user is not logged in" do
+      login_cashier
+      
+      it "returns unsuccess response" do
+        get :edit, {:id => order.to_param}, valid_session
+        expect(response).to be_success
+      end
     end
   end
 
   describe "POST #create" do
+    login_cashier
+    
     context "with valid params" do
       it "creates a new Order" do
         expect {
-          post :create, {:order => valid_attributes}, valid_session
+          post :create, {:order => FactoryGirl.build(:order).attributes}
         }.to change(Order, :count).by(1)
       end
 
       it "redirects to the created order" do
-        post :create, {:order => valid_attributes}, valid_session
+        post :create, {:order => FactoryGirl.build(:order).attributes}
         expect(response).to redirect_to(Order.last)
       end
     end
 
     context "with invalid params" do
       it "returns a success response (i.e. to display the 'new' template)" do
-        post :create, {:order => invalid_attributes}, valid_session
-        expect(response).to be_success
+        post :create, {:order => FactoryGirl.build(:order).attributes.merge(pizza_type_id: nil)}
+        expect(response).to render_template("new")
       end
     end
   end
 
   describe "PUT #update" do
+    let(:pizza_type1) { create(:pizza_type, name: "abc") }
+    let!(:order) { create(:order) }
+
+    login_cashier
+    
     context "with valid params" do
       let(:new_attributes) {
-        skip("Add a hash of attributes valid for your model")
+        {pizza_type_id: pizza_type1}
       }
 
       it "updates the requested order" do
-        order = Order.create! valid_attributes
-        put :update, {:id => order.to_param, :order => new_attributes}, valid_session
+        put :update, {:id => order.to_param, :order => new_attributes}
         order.reload
-        skip("Add assertions for updated state")
-      end
-
-      it "redirects to the order" do
-        order = Order.create! valid_attributes
-        put :update, {:id => order.to_param, :order => valid_attributes}, valid_session
-        expect(response).to redirect_to(order)
+        expect(assigns(:order).pizza_type).to eq(pizza_type1)
       end
     end
 
     context "with invalid params" do
+      let(:invalid_attributes) {
+        {pizza_type_id: nil}
+      }
+      
       it "returns a success response (i.e. to display the 'edit' template)" do
-        order = Order.create! valid_attributes
-        put :update, {:id => order.to_param, :order => invalid_attributes}, valid_session
-        expect(response).to be_success
+        put :update, {:id => order.to_param, :order => invalid_attributes}
+        expect(response).to render_template("edit")
       end
     end
   end
 
   describe "DELETE #destroy" do
-    it "destroys the requested order" do
-      order = Order.create! valid_attributes
-      expect {
-        delete :destroy, {:id => order.to_param}, valid_session
-      }.to change(Order, :count).by(-1)
+    let!(:order) { create(:order) }
+
+    context "when user is logged in" do
+      login_cashier
+      
+      it "destroys the requested order" do
+        expect {
+          delete :destroy, {:id => order.to_param}, valid_session
+        }.to change(Order, :count).by(-1)
+      end
     end
 
-    it "redirects to the orders list" do
-      order = Order.create! valid_attributes
-      delete :destroy, {:id => order.to_param}, valid_session
-      expect(response).to redirect_to(orders_url)
+    context "when is not logged in" do
+      it "should not destroys the requested order" do
+        expect {
+          delete :destroy, {:id => order.to_param}, valid_session
+        }.to change(Order, :count).by(0)
+      end
     end
   end
 

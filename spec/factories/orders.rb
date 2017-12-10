@@ -3,7 +3,7 @@ FactoryGirl.define do
     customer_name "MyString"
     customer_phone "MyString"
     pickup_datetime "2017-12-10 13:05:49"
-    pizza_type nil
+    pizza_type
     size "MyString"
   end
 end
