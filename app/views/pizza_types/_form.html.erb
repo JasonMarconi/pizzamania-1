@@ -1,4 +1,4 @@
-<%= form_for(@pizza_type) do |f| %>
+<%= form_for(@pizza_type, html: {class: "form-horizontal"}) do |f| %>
   <% if @pizza_type.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(@pizza_type.errors.count, "error") %> prohibited this pizza_type from being saved:</h2>
@@ -11,11 +11,17 @@
     </div>
   <% end %>
 
-  <div class="field">
-    <%= f.label :name %><br>
-    <%= f.text_field :name %>
+  <div class="form-group">
+    <%= f.label :name, class: "col-sm-2 control-label" %>
+    <div class="col-sm-4">
+        <%= f.text_field :name, class: 'form-control' %>
+    </div>
   </div>
-  <div class="actions">
-    <%= f.submit %>
+
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+      <%= f.submit class: 'btn btn-success' %>
+      <%= link_to 'Back', pizza_types_path, class: 'btn btn-default' %>
+    </div>
   </div>
 <% end %>

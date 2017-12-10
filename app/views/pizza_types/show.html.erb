@@ -5,5 +5,5 @@
   <%= @pizza_type.name %>
 </p>
 
-<%= link_to 'Edit', edit_pizza_type_path(@pizza_type) %> |
-<%= link_to 'Back', pizza_types_path %>
+<%= link_to 'Edit', edit_pizza_type_path(@pizza_type), class: 'btn btn-primary' %>
+<%= link_to 'Back', pizza_types_path, class: 'btn btn-default' %>
